@@ -50,7 +50,7 @@ $config = [
       'enablePrettyUrl' => true,
       'showScriptName' => false,
       'rules' => [
-        'order/confirm/<id:\d+>' => 'order/confirm',
+        'login' => 'site/login',
         'order/save/<id:\d+>' => 'order/save',
       ],
     ],

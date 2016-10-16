@@ -89,17 +89,3 @@ a.desc:after {
     padding: 10px 20px;
     margin: 0 0 15px 0;
 }
-
-.navbar-inverse {
-    background-color: #00cdd5 !important;
-}
-
-.site-logo{
-    height: 130px;
-    margin-top: -16px;
-}
-
-.navbar{
-    min-height: 130px !important;
-}
-
