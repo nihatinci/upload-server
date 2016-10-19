@@ -51,6 +51,7 @@ $config = [
       'showScriptName' => false,
       'rules' => [
         'login' => 'site/login',
+        'registration' => 'site/registration',
         'order/save/<id:\d+>' => 'order/save',
       ],
     ],

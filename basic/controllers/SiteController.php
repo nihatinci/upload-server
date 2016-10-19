@@ -7,7 +7,11 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\RegistrationForm;
 use app\models\ContactForm;
+use app\models\Countries;
+use app\models\LocationTypes;
+use app\models\SecretQuestions;
 
 class SiteController extends Controller
 {
@@ -85,6 +89,51 @@ class SiteController extends Controller
         }
         return $this->render('login', [
             'model' => $model,
+        ]);
+    }
+
+    /**
+     * Login action.
+     *
+     * @return string
+     */
+    public function actionRegistration()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new RegistrationForm();
+        if ($model->load(Yii::$app->request->post()) && $model->register()) {
+            return $this->redirect('complete');
+        }
+        $arCountries = Countries::find()->all();
+        $states=[];
+        $countries=[];
+        $locationTypes=[];
+        $secretQuestions=[];
+        foreach($arCountries as $country){
+            $sts = $country->states;
+            foreach($sts as $st){
+                $states[$country->id][$st->id] = $st->state;
+            }
+            $countries[$country->id] = $country->country;
+        }
+        $arLocationTypes = LocationTypes::find()->all();
+        foreach($arLocationTypes as $locationType){
+            $locationTypes[$locationType->id] = $locationType->locationType;
+        }
+        $arSecretQuestions = SecretQuestions::find()->all();
+        foreach($arSecretQuestions as $secretQuestion){
+            $secretQuestions[$secretQuestion->id] = $secretQuestion->question;
+        }
+
+        return $this->render('registration', [
+          'countries' =>  $countries,
+          'states' => $states,
+          'locationTypes' =>  $locationTypes,
+          'secretQuestions' => $secretQuestions,
+          'model' => $model,
         ]);
     }
 

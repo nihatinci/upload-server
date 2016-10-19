@@ -9,9 +9,21 @@ use Yii;
  *
  * @property integer $id
  * @property string $username
- * @property integer $password
- * @property string $created_date
- * @property string $modified_date
+ * @property string $password
+ * @property string $email
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $title
+ * @property string $companyName
+ * @property string $phone
+ * @property string $alternatePhone
+ * @property string $fax
+ * @property integer $secretQuestionId
+ * @property string $secretAnswer
+ * @property integer $locationId
+ *
+ * @property Locations $location
+ * @property SecretQuestions $secretQuestion
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -29,11 +41,12 @@ class Users extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password'], 'required'],
-            [['password'], 'integer'],
-            [['created_date', 'modified_date'], 'safe'],
-            [['username'], 'string', 'max' => 256],
+            [['username', 'password', 'email', 'firstName', 'lastName', 'companyName', 'phone', 'secretQuestionId', 'secretAnswer', 'locationId'], 'required'],
+            [['secretQuestionId', 'locationId'], 'integer'],
+            [['username', 'password', 'email', 'firstName', 'lastName', 'title', 'companyName', 'phone', 'alternatePhone', 'fax', 'secretAnswer'], 'string', 'max' => 256],
             [['username'], 'unique'],
+            [['locationId'], 'exist', 'skipOnError' => true, 'targetClass' => Locations::className(), 'targetAttribute' => ['locationId' => 'id']],
+            [['secretQuestionId'], 'exist', 'skipOnError' => true, 'targetClass' => SecretQuestions::className(), 'targetAttribute' => ['secretQuestionId' => 'id']],
         ];
     }
 
@@ -46,8 +59,33 @@ class Users extends \yii\db\ActiveRecord
             'id' => 'ID',
             'username' => 'Username',
             'password' => 'Password',
-            'created_date' => 'Created Date',
-            'modified_date' => 'Modified Date',
+            'email' => 'Email',
+            'firstName' => 'First Name',
+            'lastName' => 'Last Name',
+            'title' => 'Title',
+            'companyName' => 'Company Name',
+            'phone' => 'Phone',
+            'alternatePhone' => 'Alternate Phone',
+            'fax' => 'Fax',
+            'secretQuestionId' => 'Secret Question ID',
+            'secretAnswer' => 'Secret Answer',
+            'locationId' => 'Location ID',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLocation()
+    {
+        return $this->hasOne(Locations::className(), ['id' => 'locationId']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSecretQuestion()
+    {
+        return $this->hasOne(SecretQuestions::className(), ['id' => 'secretQuestionId']);
     }
 }
